@@ -51,9 +51,6 @@ namespace Shutdown
         public Stopwatch Stopwatch = new Stopwatch();
         string modifier;
 
-
-
-
         /// <summary>
         /// Executes the requested shutdown
         /// </summary>
@@ -103,7 +100,7 @@ namespace Shutdown
             MyTimer.Enabled = false;
 
             string arguments = "-" + modifier;
-            Process.Start("shutdown", arguments);
+            //Process.Start("shutdown", arguments);
             OnTimer_Elapsed(EventArgs.Empty);
 
         }

@@ -40,7 +40,7 @@ namespace Shutdown
 
         void Timer_Elapsed(object sender, EventArgs e)
         {
-            this.Close();
+            //this.Close();
         }
 
         private void Sleep_CheckedChanged(object sender, EventArgs e)
@@ -95,9 +95,6 @@ namespace Shutdown
                 Console.WriteLine(exception);
             }
 
-
-
-
         }
 
         private void Shutdown_CheckedChanged(object sender, EventArgs e)
@@ -118,6 +115,7 @@ namespace Shutdown
 
         private void visual_Tick(object sender, EventArgs e)
         {
+            
             label1.Text = Interpreter.TimeRemaining(shutdown.MyTimer, tick);
             tick++;
         }

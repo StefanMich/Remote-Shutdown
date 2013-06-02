@@ -51,7 +51,9 @@ namespace Shutdown
 
         public string TimeRemaining(System.Windows.Forms.Timer MyTimer, int tick)
         {
-            return ((MyTimer.Interval / 60000) - (tick / 60) - 1).ToString() + ":" + (59 - (tick % 60)).ToString();
+            if (MyTimer.Interval / 1000 > tick)
+                return ((MyTimer.Interval / 60000) - (tick / 60) - 1).ToString() + ":" + (59 - (tick % 60)).ToString();
+            else return "00:00";
         }
     }
 }
