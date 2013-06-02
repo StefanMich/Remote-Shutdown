@@ -46,5 +46,4 @@ C:\Users\Stefan\Dropbox\Programmering\Projects\Shutdown2\Shutdown2\obj\x86\Debug
 C:\Users\Stefan\Dropbox\Programmering\Projects\Shutdown2\Shutdown2\obj\x86\Debug\Shutdown2.application
 C:\Users\Stefan\Dropbox\Programmering\Projects\Shutdown2\Shutdown2\obj\x86\Debug\Shutdown2.exe
 C:\Users\Stefan\Dropbox\Programmering\Projects\Shutdown2\Shutdown2\obj\x86\Debug\Shutdown2.pdb
-C:\Users\Stefan\Dropbox\Programmering\Projects\Shutdown2\Shutdown2\bin\Debug\Shutdown2.XML
 E:\Dropbox\Programmering\Projects\Shutdown2\Shutdown2\bin\Debug\Shutdown2.XML

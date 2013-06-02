@@ -10,7 +10,7 @@ namespace Shutdown
     /// <summary>
     /// Enum with the shutdown types, shutdown, reboot and hibernate
     /// </summary>
-    public enum ShutdownType {
+    public enum ShutdownType :byte{
         /// <summary>
         /// Shutdown mode
         /// </summary>

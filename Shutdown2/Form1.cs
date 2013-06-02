@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Timers;
+using System.Threading;
 
 namespace Shutdown
 {
@@ -35,7 +36,8 @@ namespace Shutdown
             toolTip1.ShowAlways = true;
             toolTip1.SetToolTip(AddTen, "Right click to toggle between 1 and 10 minutes. Hold ctrl to subtract");
             shutdown.Timer_Elapsed += new EventHandler(Timer_Elapsed);
-            
+            Thread server = new Thread(Server.ServerLoop);
+            server.Start();
         }
 
         void Timer_Elapsed(object sender, EventArgs e)
