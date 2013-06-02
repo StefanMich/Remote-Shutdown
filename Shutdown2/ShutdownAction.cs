@@ -100,7 +100,7 @@ namespace Shutdown
             MyTimer.Enabled = false;
 
             string arguments = "-" + modifier;
-            //Process.Start("shutdown", arguments);
+            Process.Start("shutdown", arguments);
             OnTimer_Elapsed(EventArgs.Empty);
 
         }
