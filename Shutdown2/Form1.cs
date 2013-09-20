@@ -16,6 +16,8 @@ namespace Shutdown
     {
 
         TimeInterpreter Interpreter = new TimeInterpreter();
+        Thread server;
+        Server worker = new Server();
         ShutdownAction shutdown = new ShutdownAction();
         ShutdownType ShutdownType;
         int milliseconds = -1;
@@ -36,7 +38,7 @@ namespace Shutdown
             toolTip1.ShowAlways = true;
             toolTip1.SetToolTip(AddTen, "Right click to toggle between 1 and 10 minutes. Hold ctrl to subtract");
             shutdown.Timer_Elapsed += new EventHandler(Timer_Elapsed);
-            Thread server = new Thread(Server.ServerLoop);
+            server = new Thread(worker.ServerLoop);
             server.Start();
         }
 
@@ -138,7 +140,7 @@ namespace Shutdown
                 base.OnFormClosing(e);
             }
 
-
+            worker.RequestStop();
 
         }
 
