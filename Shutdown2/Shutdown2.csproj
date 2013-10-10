@@ -100,6 +100,12 @@
     <Compile Include="Server.cs" />
     <Compile Include="ShutdownAction.cs" />
     <Compile Include="TimeInterpreter.cs" />
+    <Compile Include="MainInterface.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MainInterface.Designer.cs">
+      <DependentUpon>MainInterface.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -107,6 +113,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainInterface.resx">
+      <DependentUpon>MainInterface.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

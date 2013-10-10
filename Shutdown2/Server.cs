@@ -41,7 +41,7 @@ namespace Shutdown
                     int k = s.Receive(b);
 
                     Console.Write("Received.." + ShutdownMessage.ReadMessage(b, k));
-
+                    MainForm.SetText(ShutdownMessage.ReadMessage(b,k).ToString());
                 }
 
                 Console.ReadKey();

@@ -7,9 +7,9 @@ using System.Windows.Forms;
 
 namespace Shutdown
 {
-    class TimeInterpreter
+    public static class TimeInterpreter
     {
-        public int InterpretTime(string time)
+        public static int InterpretTime(string time)
         {
             DateTime now = DateTime.Now;
             DateTime then = DateTime.Parse(time);
@@ -24,7 +24,7 @@ namespace Shutdown
         }
 
 
-        public int InterpretCountdown(string time)
+        public static int InterpretCountdown(string time)
         {
             int total = -1;
 
@@ -36,7 +36,7 @@ namespace Shutdown
             return total;
         }
 
-        public void addTime(int add, TimeType TimeType, TextBox TimeFormat)
+        public static void addTime(int add, TimeType TimeType, TextBox TimeFormat)
         {
             if (TimeType == TimeType.Countdown)
                 TimeFormat.Text = (int.Parse(TimeFormat.Text) + add).ToString();
@@ -49,7 +49,7 @@ namespace Shutdown
             }
         }
 
-        public string TimeRemaining(System.Windows.Forms.Timer MyTimer, int tick)
+        public static string TimeRemaining(System.Windows.Forms.Timer MyTimer, int tick)
         {
             if (MyTimer.Interval / 1000 > tick)
                 return ((MyTimer.Interval / 60000) - (tick / 60) - 1).ToString() + ":" + (59 - (tick % 60)).ToString();
