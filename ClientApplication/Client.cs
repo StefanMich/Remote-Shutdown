@@ -5,6 +5,7 @@ using System.Text;
 using System.Net.Sockets;
 using System.IO;
 using Shutdown;
+using System.Windows.Forms;
 
 namespace ClientApplication
 {
@@ -27,13 +28,13 @@ namespace ClientApplication
             }
             catch (SocketException e)
             {
-                Console.WriteLine("Could not connect to specified host (" + e.SocketErrorCode + ")\nErrormessage: " + e.Message);
+                MessageBox.Show( "Could not connect to specified host (" + e.SocketErrorCode + ")\nErrormessage: " + e.Message);
 
                 return false;
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error: " + e.StackTrace);
+                MessageBox.Show("Error: " + e.StackTrace);
                 return false;
             }
             return true;

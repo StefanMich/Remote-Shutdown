@@ -8,6 +8,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Timers;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Collections.Concurrent;
 
 namespace Shutdown
 {
@@ -16,18 +18,19 @@ namespace Shutdown
     {
         Thread server;
         Server worker = new Server();
-        Queue<ShutdownMessage> shutdownQueue;
         ShutdownAction shutdown = new ShutdownAction();
-        
+        delegate void formCallback(string text);
+
         int milliseconds = -1;
-        
+
         Minimize Mini = new Minimize();
         System.Windows.Forms.Timer visualTimer = new System.Windows.Forms.Timer();
         int tick = 1;
-        static string text = "";
 
 
 
+
+        //http://csharp.net-informations.com/communications/csharp-chat-server-programming.htm
         /// <summary>
         /// Initializes a new instance of the <see cref="MainForm"/> class.
         /// </summary>
@@ -35,64 +38,56 @@ namespace Shutdown
         {
             InitializeComponent();
             visualTimer.Tick += new System.EventHandler(visual_Tick);
+
+            notifyIcon1.Click += notifyIcon1_Click;
+
+
+
             toolTip1.ShowAlways = true;
             toolTip1.SetToolTip(mainInterface1.AddTen, "Right click to toggle between 1 and 10 minutes. Hold ctrl to subtract");
             shutdown.Timer_Elapsed += new EventHandler(Timer_Elapsed);
             server = new Thread(worker.ServerLoop);
             server.Start();
 
-            mainInterface1.Execute.Click +=Execute_Click;
+            Task consumer = Task.Factory.StartNew(Consumer);
+
+            mainInterface1.Execute.Click += Execute_Click;
 
 
         }
+
+
 
         void Timer_Elapsed(object sender, EventArgs e)
         {
             //this.Close();
         }
 
-        public static void SetText(string s)
-        {
-            text = s;
-        }
-
-        
-
-        private void timer_Tick(object sender, EventArgs e)
-        {
-            //label1.Text = (shutdown.MyTimer.Interval / 60000).ToString();
-        }
-
-
         private void Execute_Click(object sender, EventArgs e)
         {
+            milliseconds = mainInterface1.CalculateTime();
 
-            try
+            ExecuteShutdown(milliseconds, mainInterface1.ShutdownType);
+
+        }
+
+        private void ExecuteShutdown(int milliseconds, ShutdownType st)
+        {
+            if (milliseconds >= 0)
             {
-                if (mainInterface1.TimeType == TimeType.Countdown)
-                    milliseconds = TimeInterpreter.InterpretCountdown(mainInterface1.TimeFormat.Text);
-                else if (mainInterface1.TimeType == TimeType.Time)
-                    milliseconds = TimeInterpreter.InterpretTime(mainInterface1.TimeFormat.Text);
-                else
-                    MessageBox.Show("Choose timer type");
-
-                if (milliseconds >= 0)
-                {
-                    shutdown.ShutdownActionExe(milliseconds, mainInterface1.ShutdownType);
-                    Mini.ToTray(notifyIcon1, this, shutdown.MyTimer, mainInterface1.ShutdownType);
-                    tick = 1;
-                    visualTimer.Interval = 1000;
-                    visualTimer.Enabled = true;
-                }
-                else MessageBox.Show("Time must be positive");
-
+                shutdown.ShutdownActionExe(milliseconds, st);
+                Mini.ToTray(notifyIcon1, this, shutdown.MyTimer, st);
+                tick = 1;
+                visualTimer.Interval = 1000;
+                visualTimer.Enabled = true;
             }
-            catch (FormatException exception)
-            {
-                MessageBox.Show("Incorrect time format");
-                Console.WriteLine(exception);
-            }
+            else MessageBox.Show("Time must be positive");
+        }
 
+        public void ExecuteShutdown(ShutdownMessage s)
+        {
+
+            ExecuteShutdown(s.Interval, s.Type);
         }
 
         private void notifyIcon1_DoubleClick(object sender, EventArgs e)
@@ -103,14 +98,25 @@ namespace Shutdown
         private void visual_Tick(object sender, EventArgs e)
         {
 
-            mainInterface1.label1.Text = TimeInterpreter.TimeRemaining(shutdown.MyTimer, tick);
+            mainInterface1.label1.Text = TimeInterpreter.TimeRemaining(shutdown.MyTimer.Interval, tick);
             tick++;
         }
 
         private void notifyIcon1_Click(object sender, EventArgs e)
         {
-            notifyIcon1.BalloonTipText = "Time remaining to " + mainInterface1.ShutdownType.ToString() + ": " +TimeInterpreter .TimeRemaining(shutdown.MyTimer, tick);
+            ShutdownType s = mainInterface1.ShutdownType;
+            notifyIcon1.BalloonTipText = "Time remaining to " + s.ToString() + ": " + TimeInterpreter.TimeRemaining(shutdown.MyTimer.Interval, tick);
             notifyIcon1.ShowBalloonTip(500);
+        }
+
+        public void Consumer()
+        {
+            while (true)
+            {
+                ShutdownMessage s;
+                if (worker.shutdownCollection.TryTake(out s))
+                    ExecuteShutdown(s);
+            }
         }
 
         /// <summary>
@@ -132,9 +138,6 @@ namespace Shutdown
             worker.RequestStop();
 
         }
-
-        
-
     }
 }
 

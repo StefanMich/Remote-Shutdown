@@ -5,6 +5,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
+using System.Collections.Concurrent;
 
 namespace Shutdown
 {
@@ -12,6 +13,13 @@ namespace Shutdown
     {
         private volatile bool shouldStop = false;
         TcpListener listen;
+        public BlockingCollection<ShutdownMessage> shutdownCollection;
+
+        public Server()
+        {
+            shutdownCollection = new BlockingCollection<ShutdownMessage>();
+
+        }
 
         public void RequestStop()
         {
@@ -23,11 +31,11 @@ namespace Shutdown
         {
             try
             {
-                IPAddress idAP = IPAddress.Parse("192.168.10.118");
+                IPAddress idAP = IPAddress.Parse("192.168.1.2");
                 idAP = IPAddress.Parse("127.0.0.1");
                 listen = new TcpListener(IPAddress.Any, 8001);
                 listen.Start();
-                
+
                 Console.WriteLine("Server running at port 8001");
                 Console.WriteLine("The local endpoint is " + listen.LocalEndpoint);
                 Console.WriteLine("Waiting for connection");
@@ -41,7 +49,8 @@ namespace Shutdown
                     int k = s.Receive(b);
 
                     Console.Write("Received.." + ShutdownMessage.ReadMessage(b, k));
-                    MainForm.SetText(ShutdownMessage.ReadMessage(b,k).ToString());
+
+                    shutdownCollection.Add(ShutdownMessage.ReadMessage(b, k));
                 }
 
                 Console.ReadKey();
@@ -54,6 +63,7 @@ namespace Shutdown
             }
         }
 
+
         private static string byteToString(byte[] b, int size)
         {
             string s = "";
@@ -65,7 +75,7 @@ namespace Shutdown
             return s;
         }
 
-        
+
 
     }
 }

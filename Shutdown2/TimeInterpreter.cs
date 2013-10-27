@@ -49,10 +49,10 @@ namespace Shutdown
             }
         }
 
-        public static string TimeRemaining(System.Windows.Forms.Timer MyTimer, int tick)
+        public static string TimeRemaining(int interval, int tick)
         {
-            if (MyTimer.Interval / 1000 > tick)
-                return ((MyTimer.Interval / 60000) - (tick / 60) - 1).ToString() + ":" + (59 - (tick % 60)).ToString();
+            if (interval / 1000 > tick)
+                return ((interval / 60000) - (tick / 60) - 1).ToString() + ":" + (59 - (tick % 60)).ToString();
             else return "00:00";
         }
     }

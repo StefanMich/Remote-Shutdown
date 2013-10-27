@@ -11,7 +11,7 @@ namespace Shutdown
 {
     public partial class MainInterface : UserControl
     {
-        
+
         public TimeType TimeType;
         public ShutdownType ShutdownType;
 
@@ -20,11 +20,26 @@ namespace Shutdown
             InitializeComponent();
         }
 
-        
-
-        private void AddTen_MouseClick(object sender, MouseEventArgs e)
+        public int CalculateTime()
         {
+            int milliseconds =0;
+            try
+            {
+                if (TimeType == TimeType.Countdown)
+                    milliseconds = TimeInterpreter.InterpretCountdown(TimeFormat.Text);
+                else if (TimeType == TimeType.Time)
+                    milliseconds = TimeInterpreter.InterpretTime(TimeFormat.Text);
+                else
+                    MessageBox.Show("Choose timer type");
 
+            }
+            catch (FormatException exception)
+            {
+                MessageBox.Show("Incorrect time format");
+                Console.WriteLine(exception);
+            }
+
+            return milliseconds;
         }
 
         private void AddTen_MouseUp(object sender, MouseEventArgs e)
@@ -53,7 +68,6 @@ namespace Shutdown
         {
             ShutdownType = ShutdownType.Hibernate;
         }
-
 
         private void Shutdown_CheckedChanged(object sender, EventArgs e)
         {

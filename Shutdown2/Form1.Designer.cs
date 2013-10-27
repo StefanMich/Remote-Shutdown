@@ -60,7 +60,6 @@
             this.ClientSize = new System.Drawing.Size(233, 143);
             this.Controls.Add(this.mainInterface1);
             this.Name = "MainForm";
-            this.Text = "Shutdown";
             this.ResumeLayout(false);
 
         }

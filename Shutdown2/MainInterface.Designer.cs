@@ -149,7 +149,6 @@
             this.AddTen.Text = "+10";
             this.AddTen.UseCompatibleTextRendering = true;
             this.AddTen.UseVisualStyleBackColor = true;
-            this.AddTen.MouseClick += new System.Windows.Forms.MouseEventHandler(this.AddTen_MouseClick);
             this.AddTen.MouseUp += new System.Windows.Forms.MouseEventHandler(this.AddTen_MouseUp);
             // 
             // Execute

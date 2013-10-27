@@ -15,11 +15,23 @@ namespace ClientApplication
     {
         Client c;
         bool ready;
+        int milliseconds;
+
         public Form1()
         {
             InitializeComponent();
+            milliseconds = 0;
             c = new Client();
             ready = c.Connect();
+
+            mainInterface1.Execute.Click += Execute_Click;
+        }
+
+        void Execute_Click(object sender, EventArgs e)
+        {
+            milliseconds = mainInterface1.CalculateTime();
+
+            c.Transmit(new ShutdownMessage(milliseconds, mainInterface1.ShutdownType));
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -39,5 +51,7 @@ namespace ClientApplication
             if (ready)
                 c.Transmit(new ShutdownMessage(45006, Shutdown.ShutdownType.Hibernate));
         }
+
+
     }
 }
