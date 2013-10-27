@@ -98,7 +98,7 @@ namespace Shutdown
         private void visual_Tick(object sender, EventArgs e)
         {
 
-            mainInterface1.label1.Text = TimeInterpreter.TimeRemaining(shutdown.MyTimer.Interval, tick);
+            mainInterface1.statusLabel.Text = TimeInterpreter.TimeRemaining(shutdown.MyTimer.Interval, tick);
             tick++;
         }
 

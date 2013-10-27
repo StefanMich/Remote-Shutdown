@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.label1 = new System.Windows.Forms.Label();
+            this.statusLabel = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
             this.Time = new System.Windows.Forms.RadioButton();
             this.Countdown = new System.Windows.Forms.RadioButton();
@@ -45,14 +45,14 @@
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // label1
+            // statusLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(58, 114);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(105, 13);
-            this.label1.TabIndex = 18;
-            this.label1.Text = "No shutdown started";
+            this.statusLabel.AutoSize = true;
+            this.statusLabel.Location = new System.Drawing.Point(58, 114);
+            this.statusLabel.Name = "statusLabel";
+            this.statusLabel.Size = new System.Drawing.Size(105, 13);
+            this.statusLabel.TabIndex = 18;
+            this.statusLabel.Text = "No shutdown started";
             // 
             // panel2
             // 
@@ -159,7 +159,6 @@
             this.Execute.TabIndex = 14;
             this.Execute.Text = "Execute";
             this.Execute.UseVisualStyleBackColor = true;
-            
             // 
             // notifyIcon1
             // 
@@ -170,7 +169,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.statusLabel);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.TimeFormat);
@@ -189,7 +188,7 @@
 
         #endregion
 
-        public System.Windows.Forms.Label label1;
+        public System.Windows.Forms.Label statusLabel;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.RadioButton Time;
         private System.Windows.Forms.RadioButton Countdown;
