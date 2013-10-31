@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Windows.Forms;
 using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
 namespace Shutdown
 {
@@ -31,7 +32,7 @@ namespace Shutdown
         {
             try
             {
-                IPAddress idAP = IPAddress.Parse("192.168.1.2");
+                IPAddress idAP = IPAddress.Parse("127.0.0.1");
                 idAP = IPAddress.Parse("127.0.0.1");
                 listen = new TcpListener(IPAddress.Any, 8001);
                 listen.Start();
@@ -40,18 +41,16 @@ namespace Shutdown
                 Console.WriteLine("The local endpoint is " + listen.LocalEndpoint);
                 Console.WriteLine("Waiting for connection");
 
-                Socket s = listen.AcceptSocket();
+                Socket s;
 
-                Console.WriteLine("Connection accepted from " + s.RemoteEndPoint);
-                while (!shouldStop)
+                while (true)
                 {
-                    byte[] b = new byte[100];
-                    int k = s.Receive(b);
-
-                    Console.Write("Received.." + ShutdownMessage.ReadMessage(b, k));
-
-                    shutdownCollection.Add(ShutdownMessage.ReadMessage(b, k));
+                    s = listen.AcceptSocket();
+                    Console.WriteLine("Succesfully connected to " + s.RemoteEndPoint);
+                    Task.Factory.StartNew(() => ClientConnectedLoop(s));
                 }
+
+
 
                 Console.ReadKey();
                 s.Close();
@@ -61,6 +60,27 @@ namespace Shutdown
             {
                 Console.WriteLine("Error: " + e.StackTrace);
             }
+        }
+
+        private void ClientConnectedLoop(Socket s)
+        {
+            try
+            {
+                while (!shouldStop)
+                {
+                    byte[] b = new byte[100];
+                    if (s.Connected)
+                    {
+                        int k = s.Receive(b);
+
+                        Console.Write("Received.." + ShutdownMessage.ReadMessage(b, k));
+
+                        shutdownCollection.Add(ShutdownMessage.ReadMessage(b, k));
+                    }
+                }
+            }
+            catch (SocketException e)
+            { }
         }
 
 

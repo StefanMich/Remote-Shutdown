@@ -23,7 +23,7 @@ namespace ClientApplication
             try
             {
                 Console.WriteLine("Connecting");
-                tcp.Connect("192.168.1.2", 8001);
+                tcp.Connect("127.0.0.1", 8001);
                 Console.WriteLine("Connected");
             }
             catch (SocketException e)

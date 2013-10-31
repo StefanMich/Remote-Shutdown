@@ -37,8 +37,8 @@ namespace Shutdown
         public MainForm()
         {
             InitializeComponent();
-            visualTimer.Tick += new System.EventHandler(visual_Tick);
 
+            visualTimer.Tick += visual_Tick;
             notifyIcon1.Click += notifyIcon1_Click;
 
 
@@ -55,7 +55,6 @@ namespace Shutdown
 
 
         }
-
 
 
         void Timer_Elapsed(object sender, EventArgs e)
