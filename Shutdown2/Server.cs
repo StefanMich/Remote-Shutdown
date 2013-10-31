@@ -75,6 +75,9 @@ namespace Shutdown
 
                         Console.Write("Received.." + ShutdownMessage.ReadMessage(b, k));
 
+                        byte[] msg = "Succesfully initiated shutdown".GetBytes();
+                        s.Send(msg);
+
                         shutdownCollection.Add(ShutdownMessage.ReadMessage(b, k));
                     }
                 }

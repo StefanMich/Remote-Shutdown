@@ -99,6 +99,7 @@
     </Compile>
     <Compile Include="Server.cs" />
     <Compile Include="ShutdownAction.cs" />
+    <Compile Include="StringConverter.cs" />
     <Compile Include="TimeInterpreter.cs" />
     <Compile Include="MainInterface.cs">
       <SubType>UserControl</SubType>

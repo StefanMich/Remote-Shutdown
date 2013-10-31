@@ -36,6 +36,7 @@
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.ttTime = new System.Windows.Forms.ToolTip(this.components);
+            this.consumer = new System.ComponentModel.BackgroundWorker();
             this.mainInterface1 = new Shutdown.MainInterface();
             this.SuspendLayout();
             // 
@@ -45,6 +46,12 @@
             this.notifyIcon1.Visible = true;
             this.notifyIcon1.BalloonTipClicked += new System.EventHandler(this.notifyIcon1_DoubleClick);
             this.notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
+            // 
+            // consumer
+            // 
+            this.consumer.WorkerReportsProgress = true;
+            this.consumer.DoWork += new System.ComponentModel.DoWorkEventHandler(this.consumer_DoWork);
+            this.consumer.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.consumer_ProgressChanged);
             // 
             // mainInterface1
             // 
@@ -70,6 +77,7 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.ToolTip ttTime;
         private MainInterface mainInterface1;
+        private System.ComponentModel.BackgroundWorker consumer;
     }
 }
 

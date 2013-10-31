@@ -49,11 +49,9 @@ namespace Shutdown
             server = new Thread(worker.ServerLoop);
             server.Start();
 
-            Task consumer = Task.Factory.StartNew(Consumer);
+            consumer.RunWorkerAsync();
 
             mainInterface1.Execute.Click += Execute_Click;
-
-
         }
 
 
@@ -77,6 +75,7 @@ namespace Shutdown
                 shutdown.ShutdownActionExe(milliseconds, st);
                 Mini.ToTray(notifyIcon1, this, shutdown.MyTimer, st);
                 tick = 1;
+                
                 visualTimer.Interval = 1000;
                 visualTimer.Enabled = true;
             }
@@ -108,15 +107,6 @@ namespace Shutdown
             notifyIcon1.ShowBalloonTip(500);
         }
 
-        public void Consumer()
-        {
-            while (true)
-            {
-                ShutdownMessage s;
-                if (worker.shutdownCollection.TryTake(out s))
-                    ExecuteShutdown(s);
-            }
-        }
 
         /// <summary>
         /// Raises the <see cref="E:System.Windows.Forms.Form.FormClosing" /> event.
@@ -136,6 +126,21 @@ namespace Shutdown
 
             worker.RequestStop();
 
+        }
+
+        private void consumer_DoWork(object sender, DoWorkEventArgs e)
+        {
+            while (true)
+            {
+                ShutdownMessage s;
+                if (worker.shutdownCollection.TryTake(out s))
+                    consumer.ReportProgress(0, s);
+            }
+        }
+
+        private void consumer_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            ExecuteShutdown(e.UserState as ShutdownMessage);
         }
     }
 }

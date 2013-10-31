@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Shutdown;
+using System.Threading.Tasks;
 
 
 namespace ClientApplication
@@ -25,6 +26,7 @@ namespace ClientApplication
             ready = c.Connect();
 
             mainInterface1.Execute.Click += Execute_Click;
+            Task.Factory.StartNew(Consumer);
         }
 
         void Execute_Click(object sender, EventArgs e)
@@ -52,6 +54,22 @@ namespace ClientApplication
                 c.Transmit(new ShutdownMessage(45006, Shutdown.ShutdownType.Hibernate));
         }
 
-
+        delegate void setStatusText();
+        private void Consumer()
+        {
+            while (true)
+            {
+                string s;
+                if (c.status.TryTake(out s))
+                {
+                    if (mainInterface1.statusLabel.InvokeRequired)
+                    {
+                        setStatusText setStatus = () => mainInterface1.statusLabel.Text = s;
+                        mainInterface1.statusLabel.Invoke(setStatus);
+                    }
+                    else mainInterface1.statusLabel.Text = s;
+                }
+            }
+        }
     }
 }
