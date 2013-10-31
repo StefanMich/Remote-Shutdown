@@ -46,9 +46,9 @@ namespace Shutdown
         /// <summary>
         /// The shutdown timer
         /// </summary>
-        public System.Windows.Forms.Timer MyTimer = new System.Windows.Forms.Timer();
+        public System.Windows.Forms.Timer ShutdownTimer = new System.Windows.Forms.Timer();
+
         ShutdownType MyShutdownType;
-        public Stopwatch Stopwatch = new Stopwatch();
         string modifier;
 
         /// <summary>
@@ -62,26 +62,29 @@ namespace Shutdown
 
             if (interval > 0)
             {
-                MyTimer.Interval = interval;
-                MyTimer.Tick += new EventHandler(MyTimer_Elapsed);
+                ShutdownTimer.Interval = interval;
+                ShutdownTimer.Tick += new EventHandler(MyTimer_Elapsed);
 
             }
             else if (interval == 0)
             {
-                MyTimer.Interval = 1;
-                MyTimer.Tick += new EventHandler(MyTimer_Elapsed);
+                ShutdownTimer.Interval = 1;
+                ShutdownTimer.Tick += new EventHandler(MyTimer_Elapsed);
             }
-            else MyTimer.Interval = 1; // interval cannot be 0, so it is set to 1 millisecond instead
+            else ShutdownTimer.Interval = 1; // interval cannot be 0, so it is set to 1 millisecond instead
 
-            MyTimer.Start();
-            Stopwatch.Start();
-
-
+            ShutdownTimer.Start();
+            
             if (ShutdownType == ShutdownType.Shutdown) modifier = "s -f -t 0";
             else if (ShutdownType == ShutdownType.Reboot) modifier = "r -f -t 0";
             else if (ShutdownType == ShutdownType.Hibernate) modifier = "h";
 
 
+        }
+
+        public void ShutdownCancel()
+           {
+               ShutdownTimer.Enabled = false;
         }
 
         /// <summary>
@@ -97,7 +100,7 @@ namespace Shutdown
 
         void MyTimer_Elapsed(object sender, EventArgs e)
         {
-            MyTimer.Enabled = false;
+            ShutdownTimer.Enabled = false;
 
             string arguments = "-" + modifier;
             Process.Start("shutdown", arguments);
@@ -111,7 +114,7 @@ namespace Shutdown
         /// </summary>
         public void Dispose()
         {
-            MyTimer.Dispose();
+            ShutdownTimer.Dispose();
         }
     }
 }

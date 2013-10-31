@@ -30,10 +30,10 @@
         {
             this.components = new System.ComponentModel.Container();
             this.statusLabel = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.timetypePanel = new System.Windows.Forms.Panel();
             this.Time = new System.Windows.Forms.RadioButton();
             this.Countdown = new System.Windows.Forms.RadioButton();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.shutdowntypePanel = new System.Windows.Forms.Panel();
             this.Shutdown = new System.Windows.Forms.RadioButton();
             this.Sleep = new System.Windows.Forms.RadioButton();
             this.Reboot = new System.Windows.Forms.RadioButton();
@@ -41,8 +41,10 @@
             this.AddTen = new System.Windows.Forms.Button();
             this.Execute = new System.Windows.Forms.Button();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-            this.panel2.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.AddTenTooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.ExecuteTooltip = new System.Windows.Forms.ToolTip(this.components);
+            this.timetypePanel.SuspendLayout();
+            this.shutdowntypePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // statusLabel
@@ -54,14 +56,14 @@
             this.statusLabel.TabIndex = 18;
             this.statusLabel.Text = "No shutdown started";
             // 
-            // panel2
+            // timetypePanel
             // 
-            this.panel2.Controls.Add(this.Time);
-            this.panel2.Controls.Add(this.Countdown);
-            this.panel2.Location = new System.Drawing.Point(11, 31);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(86, 54);
-            this.panel2.TabIndex = 16;
+            this.timetypePanel.Controls.Add(this.Time);
+            this.timetypePanel.Controls.Add(this.Countdown);
+            this.timetypePanel.Location = new System.Drawing.Point(11, 31);
+            this.timetypePanel.Name = "timetypePanel";
+            this.timetypePanel.Size = new System.Drawing.Size(86, 54);
+            this.timetypePanel.TabIndex = 16;
             // 
             // Time
             // 
@@ -87,15 +89,15 @@
             this.Countdown.UseVisualStyleBackColor = true;
             this.Countdown.CheckedChanged += new System.EventHandler(this.Countdown_Checked);
             // 
-            // panel1
+            // shutdowntypePanel
             // 
-            this.panel1.Controls.Add(this.Shutdown);
-            this.panel1.Controls.Add(this.Sleep);
-            this.panel1.Controls.Add(this.Reboot);
-            this.panel1.Location = new System.Drawing.Point(135, 10);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(80, 76);
-            this.panel1.TabIndex = 15;
+            this.shutdowntypePanel.Controls.Add(this.Shutdown);
+            this.shutdowntypePanel.Controls.Add(this.Sleep);
+            this.shutdowntypePanel.Controls.Add(this.Reboot);
+            this.shutdowntypePanel.Location = new System.Drawing.Point(135, 10);
+            this.shutdowntypePanel.Name = "shutdowntypePanel";
+            this.shutdowntypePanel.Size = new System.Drawing.Size(80, 76);
+            this.shutdowntypePanel.TabIndex = 15;
             // 
             // Shutdown
             // 
@@ -170,17 +172,17 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.statusLabel);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.timetypePanel);
+            this.Controls.Add(this.shutdowntypePanel);
             this.Controls.Add(this.TimeFormat);
             this.Controls.Add(this.AddTen);
             this.Controls.Add(this.Execute);
             this.Name = "MainInterface";
             this.Size = new System.Drawing.Size(226, 137);
-            this.panel2.ResumeLayout(false);
-            this.panel2.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.timetypePanel.ResumeLayout(false);
+            this.timetypePanel.PerformLayout();
+            this.shutdowntypePanel.ResumeLayout(false);
+            this.shutdowntypePanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -189,10 +191,10 @@
         #endregion
 
         public System.Windows.Forms.Label statusLabel;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel timetypePanel;
         private System.Windows.Forms.RadioButton Time;
         private System.Windows.Forms.RadioButton Countdown;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel shutdowntypePanel;
         private System.Windows.Forms.RadioButton Shutdown;
         private System.Windows.Forms.RadioButton Sleep;
         private System.Windows.Forms.RadioButton Reboot;
@@ -200,6 +202,8 @@
         public System.Windows.Forms.Button AddTen;
         public System.Windows.Forms.Button Execute;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.ToolTip AddTenTooltip;
+        private System.Windows.Forms.ToolTip ExecuteTooltip;
 
         
     }

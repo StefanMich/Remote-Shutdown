@@ -27,9 +27,6 @@ namespace Shutdown
         System.Windows.Forms.Timer visualTimer = new System.Windows.Forms.Timer();
         int tick = 1;
 
-
-
-
         //http://csharp.net-informations.com/communications/csharp-chat-server-programming.htm
         /// <summary>
         /// Initializes a new instance of the <see cref="MainForm"/> class.
@@ -41,10 +38,6 @@ namespace Shutdown
             visualTimer.Tick += visual_Tick;
             notifyIcon1.Click += notifyIcon1_Click;
 
-
-
-            toolTip1.ShowAlways = true;
-            toolTip1.SetToolTip(mainInterface1.AddTen, "Right click to toggle between 1 and 10 minutes. Hold ctrl to subtract");
             shutdown.Timer_Elapsed += new EventHandler(Timer_Elapsed);
             server = new Thread(worker.ServerLoop);
             server.Start();
@@ -70,21 +63,29 @@ namespace Shutdown
 
         private void ExecuteShutdown(int milliseconds, ShutdownType st)
         {
-            if (milliseconds >= 0)
+            if (mainInterface1.ShutdownActive == false)
             {
-                shutdown.ShutdownActionExe(milliseconds, st);
-                Mini.ToTray(notifyIcon1, this, shutdown.MyTimer, st);
-                tick = 1;
-                
-                visualTimer.Interval = 1000;
-                visualTimer.Enabled = true;
+                if (milliseconds >= 0)
+                {
+                    shutdown.ShutdownActionExe(milliseconds, st);
+                    Mini.ToTray(notifyIcon1, this, shutdown.ShutdownTimer, st);
+                    tick = 1;
+
+                    visualTimer.Interval = 1000;
+                    
+                    visualTimer.Enabled = true;
+                }
+                else MessageBox.Show("Time must be positive");
             }
-            else MessageBox.Show("Time must be positive");
+            else
+            {
+                shutdown.ShutdownCancel();
+            }
+            mainInterface1.toggleActive();
         }
 
         public void ExecuteShutdown(ShutdownMessage s)
         {
-
             ExecuteShutdown(s.Interval, s.Type);
         }
 
@@ -96,14 +97,14 @@ namespace Shutdown
         private void visual_Tick(object sender, EventArgs e)
         {
 
-            mainInterface1.statusLabel.Text = TimeInterpreter.TimeRemaining(shutdown.MyTimer.Interval, tick);
+            mainInterface1.statusLabel.Text = TimeInterpreter.TimeRemaining(shutdown.ShutdownTimer.Interval, tick);
             tick++;
         }
 
         private void notifyIcon1_Click(object sender, EventArgs e)
         {
             ShutdownType s = mainInterface1.ShutdownType;
-            notifyIcon1.BalloonTipText = "Time remaining to " + s.ToString() + ": " + TimeInterpreter.TimeRemaining(shutdown.MyTimer.Interval, tick);
+            notifyIcon1.BalloonTipText = "Time remaining to " + s.ToString() + ": " + TimeInterpreter.TimeRemaining(shutdown.ShutdownTimer.Interval, tick);
             notifyIcon1.ShowBalloonTip(500);
         }
 
@@ -114,7 +115,7 @@ namespace Shutdown
         /// <param name="e">A <see cref="T:System.Windows.Forms.FormClosingEventArgs" /> that contains the event data.</param>
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            if (shutdown.MyTimer.Enabled == true)
+            if (shutdown.ShutdownTimer.Enabled == true)
             {
                 DialogResult dialog = MessageBox.Show(this, "This will cancel the shutdown. Do you want to continue?", "Cancel shutdown?", MessageBoxButtons.YesNo);
                 if (dialog == DialogResult.No)

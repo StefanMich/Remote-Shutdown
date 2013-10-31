@@ -49,12 +49,6 @@ namespace Shutdown
                     Console.WriteLine("Succesfully connected to " + s.RemoteEndPoint);
                     Task.Factory.StartNew(() => ClientConnectedLoop(s));
                 }
-
-
-
-                Console.ReadKey();
-                s.Close();
-                listen.Stop();
             }
             catch (Exception e)
             {
@@ -82,8 +76,10 @@ namespace Shutdown
                     }
                 }
             }
-            catch (SocketException e)
-            { }
+            catch (SocketException)
+            {
+                //breaks the loop
+            }
         }
 
 

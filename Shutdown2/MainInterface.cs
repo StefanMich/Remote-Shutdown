@@ -14,15 +14,25 @@ namespace Shutdown
 
         public TimeType TimeType;
         public ShutdownType ShutdownType;
+        private bool shutdownActive;
+
+        public bool ShutdownActive
+        {
+            get { return shutdownActive; }
+        }
+
 
         public MainInterface()
         {
             InitializeComponent();
+            AddTenTooltip.ShowAlways = true;
+            AddTenTooltip.SetToolTip(AddTen, "Right click to toggle between 1 and 10 minutes. Hold ctrl to subtract");
+
         }
 
         public int CalculateTime()
         {
-            int milliseconds =0;
+            int milliseconds = 0;
             try
             {
                 if (TimeType == TimeType.Countdown)
@@ -90,6 +100,22 @@ namespace Shutdown
             TimeType = TimeType.Time;
         }
 
+        public void toggleActive()
+        {
+            timetypePanel.Enabled = !timetypePanel.Enabled;
+            shutdowntypePanel.Enabled = !shutdowntypePanel.Enabled;
+
+            if (Execute.Text == "Execute")
+            {
+                shutdownActive = true;
+                Execute.Text = "Cancel";
+            }
+            else
+            {
+                Execute.Text = "Execute";
+                shutdownActive = false;
+            }
+        }
     }
 
 }
