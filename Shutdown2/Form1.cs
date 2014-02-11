@@ -79,9 +79,19 @@ namespace Shutdown
             }
             else
             {
-                shutdown.ShutdownCancel();
+                CancelShutdown();
+                
             }
             mainInterface1.toggleActive();
+        }
+
+        /// <summary>
+        /// Cancels a ongoing shutdown
+        /// </summary>
+        private void CancelShutdown()
+        {
+            shutdown.ShutdownCancel();
+            visualTimer.Enabled = false;
         }
 
         public void ExecuteShutdown(ShutdownMessage s)
