@@ -63,7 +63,8 @@ namespace Shutdown
 
         private void ExecuteShutdown(int milliseconds, ShutdownType st)
         {
-            if (mainInterface1.ShutdownActive == false)
+            
+            if (mainInterface1.ShutdownActive == false && st != ShutdownType.Cancel)
             {
                 if (milliseconds >= 0)
                 {

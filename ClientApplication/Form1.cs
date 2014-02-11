@@ -14,7 +14,7 @@ namespace ClientApplication
 {
     public partial class Form1 : Form
     {
-        Client c;
+        Client client;
         bool ready;
         int milliseconds;
 
@@ -22,8 +22,8 @@ namespace ClientApplication
         {
             InitializeComponent();
             milliseconds = 0;
-            c = new Client();
-            ready = c.Connect();
+            client = new Client();
+            ready = client.Connect();
 
             mainInterface1.Execute.Click += Execute_Click;
             Task.Factory.StartNew(Consumer);
@@ -33,26 +33,12 @@ namespace ClientApplication
         {
             milliseconds = mainInterface1.CalculateTime();
 
-            c.Transmit(new ShutdownMessage(milliseconds, mainInterface1.ShutdownType));
+            if (mainInterface1.ShutdownActive == true)
+                client.Transmit(new ShutdownMessage(0, ShutdownType.Cancel));
+            else client.Transmit(new ShutdownMessage(milliseconds, mainInterface1.ShutdownType));
+            mainInterface1.toggleActive();
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            if (ready)
-                c.Transmit(new ShutdownMessage(1, Shutdown.ShutdownType.Shutdown));
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            if (ready)
-                c.Transmit(new ShutdownMessage(900, Shutdown.ShutdownType.Reboot));
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-            if (ready)
-                c.Transmit(new ShutdownMessage(45006, Shutdown.ShutdownType.Hibernate));
-        }
 
         delegate void setStatusText();
         private void Consumer()
@@ -60,7 +46,7 @@ namespace ClientApplication
             while (true)
             {
                 string s;
-                if (c.status.TryTake(out s))
+                if (client.status.TryTake(out s))
                 {
                     if (mainInterface1.statusLabel.InvokeRequired)
                     {

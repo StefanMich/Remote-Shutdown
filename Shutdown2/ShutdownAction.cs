@@ -22,7 +22,12 @@ namespace Shutdown
         /// <summary>
         /// Hibernate mode
         /// </summary>
-        Hibernate 
+        Hibernate,
+        /// <summary>
+        /// Cancel a shutdown
+        /// </summary>
+        Cancel
+    
     }
 
     /// <summary>
