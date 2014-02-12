@@ -86,6 +86,14 @@ namespace Shutdown
             }
         }
 
+        private void MessageClient(Socket s)
+        {
+            if (s.Connected)
+            { 
+                
+            }
+        }
+
 
         private static string byteToString(byte[] b, int size)
         {

@@ -46,7 +46,7 @@ namespace ClientApplication
 
         public void Transmit(ShutdownMessage msg)
         {
-            string str = Console.ReadLine();
+            //string str = Console.ReadLine();
             Stream stream = tcp.GetStream();
 
             Console.WriteLine("Transmitting");

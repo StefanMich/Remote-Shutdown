@@ -10,7 +10,8 @@ namespace Shutdown
     /// <summary>
     /// Enum with the shutdown types, shutdown, reboot and hibernate
     /// </summary>
-    public enum ShutdownType :byte{
+    public enum ShutdownType : byte
+    {
         /// <summary>
         /// Shutdown mode
         /// </summary>
@@ -27,13 +28,26 @@ namespace Shutdown
         /// Cancel a shutdown
         /// </summary>
         Cancel
-    
+
+    }
+
+    public enum ServerStatus : byte
+    {
+        /// <summary>
+        /// Shutdown is initiated on the server
+        /// </summary>
+        ShutdownInitiated,
+        /// <summary>
+        /// Shutdown was cancelled on the server
+        /// </summary>
+        ShutdownCancelled
     }
 
     /// <summary>
     /// Time timer types, countdown and time (ex. 12:00)
     /// </summary>
-    public enum TimeType {
+    public enum TimeType
+    {
         /// <summary>
         /// Countdown
         /// </summary>
@@ -41,7 +55,7 @@ namespace Shutdown
         /// <summary>
         /// Time (ex 12:00)
         /// </summary>
-        Time 
+        Time
     }
 
 
@@ -79,7 +93,7 @@ namespace Shutdown
             else ShutdownTimer.Interval = 1; // interval cannot be 0, so it is set to 1 millisecond instead
 
             ShutdownTimer.Start();
-            
+
             if (ShutdownType == ShutdownType.Shutdown) modifier = "s -f -t 0";
             else if (ShutdownType == ShutdownType.Reboot) modifier = "r -f -t 0";
             else if (ShutdownType == ShutdownType.Hibernate) modifier = "h";
@@ -88,8 +102,8 @@ namespace Shutdown
         }
 
         public void ShutdownCancel()
-           {
-               ShutdownTimer.Enabled = false;
+        {
+            ShutdownTimer.Enabled = false;
         }
 
         /// <summary>
