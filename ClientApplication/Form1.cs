@@ -45,17 +45,35 @@ namespace ClientApplication
         {
             while (true)
             {
-                string s;
+                ServerStatus s;
                 if (client.status.TryTake(out s))
                 {
                     if (mainInterface1.statusLabel.InvokeRequired)
                     {
-                        setStatusText setStatus = () => mainInterface1.statusLabel.Text = s;
+                        setStatusText setStatus = () => mainInterface1.statusLabel.Text = ServerStatusResponseLabel(s) ;
                         mainInterface1.statusLabel.Invoke(setStatus);
                     }
-                    else mainInterface1.statusLabel.Text = s;
+                    else mainInterface1.statusLabel.Text = ServerStatusResponseLabel(s);
                 }
             }
+        }
+
+        private string ServerStatusResponseLabel(ServerStatus s)
+        {
+            string response;
+            switch (s)
+            {
+                case ServerStatus.ShutdownInitiated:
+                    response = "Shutdown succesfully initiated";
+                    break;
+                case ServerStatus.ShutdownCancelled:
+                    response = "Shutdown cancelled";
+                    break;
+                default:
+                    response = null;
+                    break;
+            }
+            return response;
         }
     }
 }

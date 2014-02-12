@@ -14,12 +14,12 @@ namespace ClientApplication
     class Client
     {
         TcpClient tcp;
-        public BlockingCollection<string> status;
+        public BlockingCollection<ServerStatus> status;
         public Client()
         {
             //ip som parameter
             tcp = new TcpClient();
-            status = new BlockingCollection<string>();
+            status = new BlockingCollection<ServerStatus>();
         }
 
         public bool Connect()
@@ -53,10 +53,10 @@ namespace ClientApplication
             byte[] b = msg.GetMessage();
             stream.Write(b, 0, b.Length);
 
-            b = new byte[100];
-            stream.Read(b, 0, 100);
-            Console.WriteLine(b.GetString());
-            status.Add(b.GetString());
+            b = new byte[1];
+            stream.Read(b, 0, 1);
+            //Console.WriteLine(b.GetString());
+            status.Add((ServerStatus)b[0]);
         }
     }
 }

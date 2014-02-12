@@ -69,17 +69,17 @@ namespace Shutdown
                     if (s.Connected)
                     {
                         int k = s.Receive(b);
-                        ShutdownMessage sm = ShutdownMessage.ReadMessage(b, k);
-                        Console.Write("Received.." + sm);
+                        ShutdownMessage message = ShutdownMessage.ReadMessage(b, k);
+                        Console.Write("Received.." + message);
 
-                        byte[] msg;
+                        byte[] msg = new byte[1];
 
-                        if (sm.Type == ShutdownType.Cancel)
-                            msg = "Shutdown cancelled".GetBytes();
-                        else msg = "Succesfully initiated shutdown".GetBytes();
+                        if (message.Type == ShutdownType.Cancel)
+                            msg[0] = (byte)ServerStatus.ShutdownCancelled;
+                        else msg[0] = (byte)ServerStatus.ShutdownInitiated;
                         s.Send(msg);
 
-                        shutdownCollection.Add(sm);
+                        shutdownCollection.Add(message);
                     }
                 }
             }
