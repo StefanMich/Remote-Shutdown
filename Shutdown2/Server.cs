@@ -7,6 +7,7 @@ using System.Net.Sockets;
 using System.Windows.Forms;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace Shutdown
 {
@@ -15,11 +16,12 @@ namespace Shutdown
         private volatile bool shouldStop = false;
         TcpListener listen;
         public BlockingCollection<ShutdownMessage> shutdownCollection;
+        private List<Socket> ConnectedClients;
 
         public Server()
         {
             shutdownCollection = new BlockingCollection<ShutdownMessage>();
-
+            ConnectedClients = new List<Socket>();
         }
 
         public void RequestStop()
@@ -47,6 +49,7 @@ namespace Shutdown
                 {
                     s = listen.AcceptSocket();
                     Console.WriteLine("Succesfully connected to " + s.RemoteEndPoint);
+                    ConnectedClients.Add(s);
                     Task.Factory.StartNew(() => ClientConnectedLoop(s));
                 }
             }
@@ -71,7 +74,7 @@ namespace Shutdown
 
                         byte[] msg;
 
-                        if(sm.Type == ShutdownType.Cancel)
+                        if (sm.Type == ShutdownType.Cancel)
                             msg = "Shutdown cancelled".GetBytes();
                         else msg = "Succesfully initiated shutdown".GetBytes();
                         s.Send(msg);
@@ -82,18 +85,32 @@ namespace Shutdown
             }
             catch (SocketException)
             {
-                //breaks the loop
+                ConnectedClients.Remove(s);
             }
         }
 
-        private void MessageClient(Socket s)
+        private void MessageClient(Socket s, ServerStatus status)
         {
             if (s.Connected)
-            { 
-                
+            {
+                using (Stream stream = new NetworkStream(s))
+                {
+                    stream.WriteByte((byte)status);
+                }
             }
         }
 
+        /// <summary>
+        /// Reports the specified status to all connected clients
+        /// </summary>
+        /// <param name="status"></param>
+        public void ReportClients(ServerStatus status)
+        {
+            foreach (var s in ConnectedClients)
+            {
+                MessageClient(s, status);
+            }
+        }
 
         private static string byteToString(byte[] b, int size)
         {
