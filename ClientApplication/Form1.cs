@@ -26,7 +26,7 @@ namespace ClientApplication
             ready = client.Connect();
 
             mainInterface1.Execute.Click += Execute_Click;
-            Task.Factory.StartNew(Consumer);
+            Task.Factory.StartNew(ServerStatusConsumer);
         }
 
         void Execute_Click(object sender, EventArgs e)
@@ -35,13 +35,16 @@ namespace ClientApplication
 
             if (mainInterface1.ShutdownActive == true)
                 client.Transmit(new ShutdownMessage(0, ShutdownType.Cancel));
-            else client.Transmit(new ShutdownMessage(milliseconds, mainInterface1.ShutdownType));
+            else
+                client.Transmit(new ShutdownMessage(milliseconds, mainInterface1.ShutdownType));
+
             mainInterface1.toggleActive();
         }
 
 
         delegate void setStatusText();
-        private void Consumer()
+
+        private void ServerStatusConsumer()
         {
             while (true)
             {
@@ -50,7 +53,7 @@ namespace ClientApplication
                 {
                     if (mainInterface1.statusLabel.InvokeRequired)
                     {
-                        setStatusText setStatus = () => mainInterface1.statusLabel.Text = ServerStatusResponseLabel(s) ;
+                        setStatusText setStatus = () => mainInterface1.statusLabel.Text = ServerStatusResponseLabel(s);
                         mainInterface1.statusLabel.Invoke(setStatus);
                     }
                     else mainInterface1.statusLabel.Text = ServerStatusResponseLabel(s);
