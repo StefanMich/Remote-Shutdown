@@ -24,12 +24,18 @@ namespace Shutdown
             ConnectedClients = new List<Socket>();
         }
 
+        /// <summary>
+        /// Stops the serverloop 
+        /// </summary>
         public void RequestStop()
         {
             listen.Stop();
             shouldStop = true;
         }
 
+        /// <summary>
+        /// The main loop waiting for incoming connections
+        /// </summary>
         public void ServerLoop()
         {
             try
