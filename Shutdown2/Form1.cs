@@ -16,8 +16,8 @@ namespace Shutdown
 
     public partial class MainForm : Form
     {
-        Thread server;
-        Server worker = new Server();
+        Thread serverThread;
+        Server server = new Server();
         ShutdownAction shutdown = new ShutdownAction();
         delegate void formCallback(string text);
 
@@ -39,8 +39,8 @@ namespace Shutdown
             notifyIcon1.Click += notifyIcon1_Click;
 
             shutdown.Timer_Elapsed += new EventHandler(Timer_Elapsed);
-            server = new Thread(worker.ServerLoop);
-            server.Start();
+            serverThread = new Thread(server.ServerLoop);
+            serverThread.Start();
 
             consumer.RunWorkerAsync();
 
@@ -50,7 +50,6 @@ namespace Shutdown
 
         void Timer_Elapsed(object sender, EventArgs e)
         {
-            //this.Close();
         }
 
         private void Execute_Click(object sender, EventArgs e)
@@ -63,7 +62,7 @@ namespace Shutdown
 
         private void ExecuteShutdown(int milliseconds, ShutdownType st)
         {
-            
+
             if (mainInterface1.ShutdownActive == false && st != ShutdownType.Cancel)
             {
                 if (milliseconds >= 0)
@@ -73,15 +72,16 @@ namespace Shutdown
                     tick = 1;
 
                     visualTimer.Interval = 1000;
-                    
+
                     visualTimer.Enabled = true;
                 }
                 else MessageBox.Show("Time must be positive");
+                server.ReportClients(ServerStatus.ShutdownInitiated);
             }
             else
             {
                 CancelShutdown();
-                
+                server.ReportClients(ServerStatus.ShutdownCancelled);
             }
             mainInterface1.toggleActive();
         }
@@ -98,6 +98,7 @@ namespace Shutdown
         public void ExecuteShutdown(ShutdownMessage s)
         {
             ExecuteShutdown(s.Interval, s.Type);
+            
         }
 
         private void notifyIcon1_DoubleClick(object sender, EventArgs e)
@@ -136,7 +137,7 @@ namespace Shutdown
                 base.OnFormClosing(e);
             }
 
-            worker.RequestStop();
+            server.RequestStop();
 
         }
 
@@ -145,7 +146,7 @@ namespace Shutdown
             while (true)
             {
                 ShutdownMessage s;
-                if (worker.shutdownCollection.TryTake(out s))
+                if (server.shutdownCollection.TryTake(out s))
                     consumer.ReportProgress(0, s);
             }
         }
@@ -153,6 +154,7 @@ namespace Shutdown
         private void consumer_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             ExecuteShutdown(e.UserState as ShutdownMessage);
+            
         }
     }
 }

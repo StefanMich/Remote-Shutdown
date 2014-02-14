@@ -17,16 +17,48 @@ namespace ClientApplication
         Client client;
         bool ready;
         int milliseconds;
+        BackgroundWorker serverStatus;
 
         public Form1()
         {
             InitializeComponent();
             milliseconds = 0;
             client = new Client();
-            ready = client.Connect();
+
 
             mainInterface1.Execute.Click += Execute_Click;
+
+            serverStatus = new BackgroundWorker();
+            serverStatus.DoWork += serverStatus_DoWork;
+            serverStatus.RunWorkerCompleted += serverStatus_RunWorkerCompleted;
+            serverStatus.RunWorkerAsync();
             Task.Factory.StartNew(ServerStatusConsumer);
+        }
+
+        void serverStatus_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            this.Close();
+        }
+
+        void serverStatus_DoWork(object sender, DoWorkEventArgs e)
+        {
+            ServerStatus s;
+            while ((s = client.ReceiveStatus()) != ServerStatus.ConnectionClosed)
+            {
+                {
+                    if (mainInterface1.statusLabel.InvokeRequired)
+                    {
+                        setStatusText setStatus = () => mainInterface1.statusLabel.Text = ServerStatusResponseLabel(s);
+                        mainInterface1.statusLabel.Invoke(setStatus);
+                    }
+                    else mainInterface1.statusLabel.Text = ServerStatusResponseLabel(s);
+
+                    mainInterface1.toggleActive();
+
+                }
+            }
+            MessageBox.Show("Connection to server was closed.");
+
         }
 
         void Execute_Click(object sender, EventArgs e)
@@ -37,8 +69,6 @@ namespace ClientApplication
                 client.Transmit(new ShutdownMessage(0, ShutdownType.Cancel));
             else
                 client.Transmit(new ShutdownMessage(milliseconds, mainInterface1.ShutdownType));
-
-            mainInterface1.toggleActive();
         }
 
 
@@ -46,19 +76,7 @@ namespace ClientApplication
 
         private void ServerStatusConsumer()
         {
-            while (true)
-            {
-                ServerStatus s;
-                if (client.status.TryTake(out s))
-                {
-                    if (mainInterface1.statusLabel.InvokeRequired)
-                    {
-                        setStatusText setStatus = () => mainInterface1.statusLabel.Text = ServerStatusResponseLabel(s);
-                        mainInterface1.statusLabel.Invoke(setStatus);
-                    }
-                    else mainInterface1.statusLabel.Text = ServerStatusResponseLabel(s);
-                }
-            }
+            // serverstatus dowork
         }
 
         private string ServerStatusResponseLabel(ServerStatus s)
@@ -67,10 +85,10 @@ namespace ClientApplication
             switch (s)
             {
                 case ServerStatus.ShutdownInitiated:
-                    response = "Shutdown succesfully initiated";
+                    response = "Shutdown in progress";
                     break;
                 case ServerStatus.ShutdownCancelled:
-                    response = "Shutdown cancelled";
+                    response = "Ready";
                     break;
                 default:
                     response = null;

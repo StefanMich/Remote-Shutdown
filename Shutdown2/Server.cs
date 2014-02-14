@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System.IO;
+using System.ComponentModel;
 
 namespace Shutdown
 {
@@ -76,14 +77,7 @@ namespace Shutdown
                     {
                         int k = s.Receive(b);
                         ShutdownMessage message = ShutdownMessage.ReadMessage(b, k);
-                        Console.Write("Received.." + message);
-
-                        byte[] msg = new byte[1];
-
-                        if (message.Type == ShutdownType.Cancel)
-                            msg[0] = (byte)ServerStatus.ShutdownCancelled;
-                        else msg[0] = (byte)ServerStatus.ShutdownInitiated;
-                        s.Send(msg);
+                        
 
                         shutdownCollection.Add(message);
                     }
@@ -102,7 +96,7 @@ namespace Shutdown
                 using (Stream stream = new NetworkStream(s))
                 {
                     stream.WriteByte((byte)status);
-                }
+                } 
             }
         }
 

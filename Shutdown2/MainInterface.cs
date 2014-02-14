@@ -100,20 +100,28 @@ namespace Shutdown
             TimeType = TimeType.Time;
         }
 
+        delegate void toggleActiveDelegate();
+
         public void toggleActive()
         {
-            timetypePanel.Enabled = !timetypePanel.Enabled;
-            shutdowntypePanel.Enabled = !shutdowntypePanel.Enabled;
-
-            if (Execute.Text == "Execute")
-            {
-                shutdownActive = true;
-                Execute.Text = "Cancel";
-            }
+            if (InvokeRequired)
+                Invoke(new toggleActiveDelegate(toggleActive));
             else
             {
-                Execute.Text = "Execute";
-                shutdownActive = false;
+                shutdownActive = !shutdownActive;
+                timetypePanel.Enabled = !timetypePanel.Enabled;
+                shutdowntypePanel.Enabled = !shutdowntypePanel.Enabled;
+
+                if (Execute.Text == "Execute")
+                {
+                    shutdownActive = true;
+                    Execute.Text = "Cancel";
+                }
+                else
+                {
+                    Execute.Text = "Execute";
+                    shutdownActive = false;
+                }
             }
         }
 

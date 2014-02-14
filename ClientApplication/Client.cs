@@ -14,13 +14,18 @@ namespace ClientApplication
     class Client
     {
         TcpClient tcp;
+        Stream stream;
+        bool ready;
         public BlockingCollection<ServerStatus> status;
         public Client()
         {
             //ip som parameter
             tcp = new TcpClient();
             status = new BlockingCollection<ServerStatus>();
+            ready = Connect();
         }
+
+        public bool Ready { get { return ready; } }
 
         public bool Connect()
         {
@@ -32,7 +37,7 @@ namespace ClientApplication
             }
             catch (SocketException e)
             {
-                MessageBox.Show( "Could not connect to specified host (" + e.SocketErrorCode + ")\nErrormessage: " + e.Message);
+                MessageBox.Show("Could not connect to specified host (" + e.SocketErrorCode + ")\nErrormessage: " + e.Message);
 
                 return false;
             }
@@ -41,22 +46,33 @@ namespace ClientApplication
                 MessageBox.Show("Error: " + e.StackTrace);
                 return false;
             }
+            stream = tcp.GetStream();
             return true;
+        }
+
+        public ServerStatus ReceiveStatus()
+        {
+            byte[] b = new byte[1];
+            ServerStatus s;
+            try
+            {
+                stream.Read(b, 0, 1);
+                s = (ServerStatus)b[0];
+            }
+            catch (IOException e)
+            { 
+                //connection was closed
+                s = ServerStatus.ConnectionClosed;
+            }
+
+            return s;
         }
 
         public void Transmit(ShutdownMessage msg)
         {
-            Stream stream = tcp.GetStream();
-
             Console.WriteLine("Transmitting");
-
             byte[] b = msg.GetMessage();
             stream.Write(b, 0, b.Length);
-
-            b = new byte[1];
-            stream.Read(b, 0, 1);
-            //Console.WriteLine(b.GetString());
-            status.Add((ServerStatus)b[0]);
         }
     }
 }
