@@ -36,11 +36,15 @@ namespace Shutdown
         /// <summary>
         /// Shutdown is initiated on the server
         /// </summary>
-        ShutdownInitiated,
+        ShutdownInitiated = 0x1,
         /// <summary>
         /// Shutdown was cancelled on the server
         /// </summary>
-        ShutdownCancelled
+        ShutdownCancelled,
+        /// <summary>
+        /// Connection to server was closed
+        /// </summary>
+        ConnectionClosed
     }
 
     /// <summary>

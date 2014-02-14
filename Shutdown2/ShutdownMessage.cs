@@ -35,6 +35,12 @@ namespace Shutdown
             return b;
         }
 
+        /// <summary>
+        /// Reads an array of and creates a <see cref="ShutownMessage"/> of its content
+        /// </summary>
+        /// <param name="b">An array of bytes</param>
+        /// <param name="k">The length of the array</param>
+        /// <returns></returns>
         public static ShutdownMessage ReadMessage(byte[] b, int k)
         {
             ShutdownType t = (ShutdownType)b[0];
