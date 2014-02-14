@@ -19,7 +19,6 @@ namespace ClientApplication
         public BlockingCollection<ServerStatus> status;
         public Client()
         {
-            //ip som parameter
             tcp = new TcpClient();
             status = new BlockingCollection<ServerStatus>();
             ready = Connect();
