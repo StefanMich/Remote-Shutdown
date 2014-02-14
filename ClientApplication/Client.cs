@@ -29,10 +29,12 @@ namespace ClientApplication
 
         public bool Connect()
         {
+            if (tcp.Connected)
+                tcp.Close();
             try
             {
                 Console.WriteLine("Connecting");
-                tcp.Connect("127.0.0.1", 8001);
+                tcp.Connect(Properties.Settings.Default.IP, 8001);
                 Console.WriteLine("Connected");
             }
             catch (SocketException e)

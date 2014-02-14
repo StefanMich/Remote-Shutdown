@@ -96,5 +96,12 @@ namespace ClientApplication
             }
             return response;
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            IPform ipf = new IPform(Properties.Settings.Default.IP);
+            if (ipf.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                client.Connect();
+        }
     }
 }
