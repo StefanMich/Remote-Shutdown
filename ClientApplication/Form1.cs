@@ -44,34 +44,34 @@ namespace ClientApplication
             ServerStatus s;
             while ((s = client.ReceiveStatus()) != ServerStatus.ConnectionClosed)
             {
-                {
-                    if (mainInterface1.statusLabel.InvokeRequired)
-                    {
-                        setStatusText setStatus = () => mainInterface1.statusLabel.Text = ServerStatusResponseLabel(s);
-                        mainInterface1.statusLabel.Invoke(setStatus);
-                    }
-                    else mainInterface1.statusLabel.Text = ServerStatusResponseLabel(s);
+                setStatusLabel(s);
 
-                    mainInterface1.toggleActive();
-
-                }
+                mainInterface1.toggleActive(s);
             }
             MessageBox.Show("Connection to server was closed.");
 
+        }
+        delegate void setStatusText(ServerStatus s);
+
+        private void setStatusLabel(ServerStatus s)
+        {
+            if (mainInterface1.statusLabel.InvokeRequired)
+            {
+                setStatusText setStatus = (status) => mainInterface1.statusLabel.Text = ServerStatusResponseLabel(status);
+                mainInterface1.statusLabel.Invoke(setStatus,s);
+            }
+            else mainInterface1.statusLabel.Text = ServerStatusResponseLabel(s);
         }
 
         void Execute_Click(object sender, EventArgs e)
         {
             milliseconds = mainInterface1.CalculateTime();
 
-            if (mainInterface1.ShutdownActive == true)
+            if (mainInterface1.Execute.Text == MainInterface.cancellabel)
                 client.Transmit(new ShutdownMessage(0, ShutdownType.Cancel));
             else
                 client.Transmit(new ShutdownMessage(milliseconds, mainInterface1.ShutdownType));
         }
-
-
-        delegate void setStatusText();
 
 
         private string ServerStatusResponseLabel(ServerStatus s)

@@ -56,14 +56,17 @@ namespace Shutdown
         {
             milliseconds = mainInterface1.CalculateTime();
 
-            ExecuteShutdown(milliseconds, mainInterface1.ShutdownType);
+            if (mainInterface1.Execute.Text == MainInterface.cancellabel)
+                ExecuteShutdown(0, ShutdownType.Cancel);
+            else
+                ExecuteShutdown(milliseconds, mainInterface1.ShutdownType);
 
         }
 
         private void ExecuteShutdown(int milliseconds, ShutdownType st)
         {
 
-            if (mainInterface1.ShutdownActive == false && st != ShutdownType.Cancel)
+            if (st != ShutdownType.Cancel)
             {
                 if (milliseconds >= 0)
                 {
@@ -77,13 +80,15 @@ namespace Shutdown
                 }
                 else MessageBox.Show("Time must be positive");
                 server.ReportClients(ServerStatus.ShutdownInitiated);
+                mainInterface1.toggleActive(ServerStatus.ShutdownInitiated);
             }
             else
             {
                 CancelShutdown();
                 server.ReportClients(ServerStatus.ShutdownCancelled);
+                mainInterface1.toggleActive(ServerStatus.ShutdownCancelled);
             }
-            mainInterface1.toggleActive();
+
         }
 
         /// <summary>
@@ -98,7 +103,7 @@ namespace Shutdown
         public void ExecuteShutdown(ShutdownMessage s)
         {
             ExecuteShutdown(s.Interval, s.Type);
-            
+
         }
 
         private void notifyIcon1_DoubleClick(object sender, EventArgs e)
@@ -154,8 +159,9 @@ namespace Shutdown
         private void consumer_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             ExecuteShutdown(e.UserState as ShutdownMessage);
-            
+
         }
+
     }
 }
 

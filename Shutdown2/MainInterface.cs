@@ -11,15 +11,12 @@ namespace Shutdown
 {
     public partial class MainInterface : UserControl
     {
+        public const string cancellabel = "Cancel";
+        public const string executelabel = "Execute";
 
         public TimeType TimeType;
         public ShutdownType ShutdownType;
-        private bool shutdownActive;
-
-        public bool ShutdownActive
-        {
-            get { return shutdownActive; }
-        }
+        
 
 
         public MainInterface()
@@ -100,28 +97,37 @@ namespace Shutdown
             TimeType = TimeType.Time;
         }
 
-        delegate void toggleActiveDelegate();
+        delegate void toggleActiveDelegate(ServerStatus s);
 
-        public void toggleActive()
+        public void toggleActive(ServerStatus s)
         {
             if (InvokeRequired)
-                Invoke(new toggleActiveDelegate(toggleActive));
+                Invoke(new toggleActiveDelegate(toggleActive), s);
             else
             {
-                shutdownActive = !shutdownActive;
-                timetypePanel.Enabled = !timetypePanel.Enabled;
-                shutdowntypePanel.Enabled = !shutdowntypePanel.Enabled;
+                toggleInterface(s);
+            }
+        }
 
-                if (Execute.Text == "Execute")
-                {
-                    shutdownActive = true;
-                    Execute.Text = "Cancel";
-                }
-                else
-                {
-                    Execute.Text = "Execute";
-                    shutdownActive = false;
-                }
+        private void toggleInterface(ServerStatus s)
+        {
+            if (s == ServerStatus.ShutdownCancelled)
+            {
+                timetypePanel.Enabled = true;
+                shutdowntypePanel.Enabled = true;
+
+                Execute.Text = executelabel;
+            }
+            else if (s == ServerStatus.ShutdownInitiated)
+            {
+                timetypePanel.Enabled = false;
+                shutdowntypePanel.Enabled = false;
+
+                Execute.Text = cancellabel;
+            }
+            else
+            { 
+                // Connection closed
             }
         }
 
