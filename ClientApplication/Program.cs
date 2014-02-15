@@ -16,9 +16,10 @@ namespace ClientApplication
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             if (Properties.Settings.Default.IP == "")
-            { IPform ipf = new IPform("");
-            if (ipf.ShowDialog() == DialogResult.Cancel)
-                Application.Exit();
+            {
+                IPform ipf = new IPform("");
+                if (ipf.ShowDialog() == DialogResult.Cancel)
+                    Application.Exit();
             }
             Application.Run(new Form1());
         }

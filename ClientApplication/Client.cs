@@ -29,7 +29,7 @@ namespace ClientApplication
         public bool Connect()
         {
             if (tcp.Connected)
-                tcp.Close();
+                tcp = new TcpClient();
             try
             {
                 Console.WriteLine("Connecting");

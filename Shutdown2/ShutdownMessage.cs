@@ -48,7 +48,7 @@ namespace Shutdown
 
             return new ShutdownMessage(i, t);
         }
-
+            
         public override string ToString()
         {
             return "Type: " + type.ToString() + " Interval: " + interval.ToString() + "\n";

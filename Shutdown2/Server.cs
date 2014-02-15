@@ -76,10 +76,11 @@ namespace Shutdown
                     if (s.Connected)
                     {
                         int k = s.Receive(b);
-                        ShutdownMessage message = ShutdownMessage.ReadMessage(b, k);
-                        
-
-                        shutdownCollection.Add(message);
+                        if (k > 0) // The server receives an empty message when a connection is closed
+                        {
+                            ShutdownMessage message = ShutdownMessage.ReadMessage(b, k);
+                            shutdownCollection.Add(message);
+                        }
                     }
                 }
             }
@@ -96,7 +97,7 @@ namespace Shutdown
                 using (Stream stream = new NetworkStream(s))
                 {
                     stream.WriteByte((byte)status);
-                } 
+                }
             }
         }
 
