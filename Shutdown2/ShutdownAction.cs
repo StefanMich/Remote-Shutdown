@@ -126,7 +126,9 @@ namespace Shutdown
             ShutdownTimer.Enabled = false;
 
             string arguments = "-" + modifier;
+#if !DEBUG
             Process.Start("shutdown", arguments);
+#endif
             OnTimer_Elapsed(EventArgs.Empty);
 
         }
