@@ -9,6 +9,8 @@ namespace Shutdown
 {
     class Minimize
     {
+        delegate void hideform();
+
         public void ToTray(NotifyIcon notify, Form form, System.Windows.Forms.Timer MyTimer, ShutdownType ShutdownType)
         {
             notify.Icon =  new System.Drawing.Icon("favicon.ico");
@@ -19,8 +21,13 @@ namespace Shutdown
 
             //notify.ShowBalloonTip(500, "Shutdown", "Shutting down in x", System.Windows.Forms.ToolTipIcon.Info);
             notify.ShowBalloonTip(500);
-            form.Hide();
 
+            if (form.InvokeRequired)
+            {
+                hideform hidedelegate = () => form.Hide();
+                form.Invoke(hidedelegate);
+            }
+            else form.Hide();
         }
     }
 }
