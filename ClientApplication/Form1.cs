@@ -32,7 +32,6 @@ namespace ClientApplication
             serverStatus.DoWork += serverStatus_DoWork;
             serverStatus.RunWorkerCompleted += serverStatus_RunWorkerCompleted;
             serverStatus.RunWorkerAsync();
-            Task.Factory.StartNew(ServerStatusConsumer);
         }
 
         void serverStatus_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -74,10 +73,6 @@ namespace ClientApplication
 
         delegate void setStatusText();
 
-        private void ServerStatusConsumer()
-        {
-            // serverstatus dowork
-        }
 
         private string ServerStatusResponseLabel(ServerStatus s)
         {

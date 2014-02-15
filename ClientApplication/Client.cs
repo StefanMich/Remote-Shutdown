@@ -32,9 +32,7 @@ namespace ClientApplication
                 tcp = new TcpClient();
             try
             {
-                Console.WriteLine("Connecting");
                 tcp.Connect(Properties.Settings.Default.IP, 8001);
-                Console.WriteLine("Connected");
             }
             catch (SocketException e)
             {
