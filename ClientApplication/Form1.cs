@@ -69,10 +69,14 @@ namespace ClientApplication
         {
             milliseconds = mainInterface1.CalculateTime();
 
-            if (mainInterface1.Execute.Text == MainInterface.cancellabel)
-                client.Transmit(new ShutdownMessage(0, ShutdownType.Cancel));
-            else
-                client.Transmit(new ShutdownMessage(milliseconds, mainInterface1.ShutdownType));
+            if (client.Connected)
+            {
+                if (mainInterface1.Execute.Text == MainInterface.cancellabel)
+                    client.Transmit(new ShutdownMessage(0, ShutdownType.Cancel));
+                else
+                    client.Transmit(new ShutdownMessage(milliseconds, mainInterface1.ShutdownType));
+            }
+            else MessageBox.Show("Not connected to a server. Please input a valid IP in the settings dialog");
         }
 
 
