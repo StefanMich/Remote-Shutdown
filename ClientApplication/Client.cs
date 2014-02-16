@@ -19,25 +19,28 @@ namespace ClientApplication
         public BlockingCollection<ServerStatus> status;
         public Client()
         {
-            tcp = new TcpClient();
             status = new BlockingCollection<ServerStatus>();
             ready = Connect();
         }
+
+        public bool Connected { get { return tcp.Connected;} }
 
         public bool Ready { get { return ready; } }
 
         public bool Connect()
         {
-            if (tcp.Connected)
+            if (tcp == null || tcp.Connected)
+            {
                 tcp = new TcpClient();
+            }
             try
             {
                 tcp.Connect(Properties.Settings.Default.IP, 8001);
             }
             catch (SocketException e)
             {
-                MessageBox.Show("Could not connect to specified host (" + e.SocketErrorCode + ")\nErrormessage: " + e.Message);
-
+                MessageBox.Show("Could not connect to specified host (" + e.Message + ")\nErrormessage: " + e.Message);
+                
                 return false;
             }
             catch (Exception e)
@@ -59,7 +62,7 @@ namespace ClientApplication
                 s = (ServerStatus)b[0];
             }
             catch (IOException e)
-            { 
+            {
                 //connection was closed
                 s = ServerStatus.ConnectionClosed;
             }

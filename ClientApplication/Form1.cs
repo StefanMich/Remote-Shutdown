@@ -42,14 +42,16 @@ namespace ClientApplication
         void serverStatus_DoWork(object sender, DoWorkEventArgs e)
         {
             ServerStatus s;
-            while ((s = client.ReceiveStatus()) != ServerStatus.ConnectionClosed)
+            while (true)
             {
-                setStatusLabel(s);
+                if (client.Connected)
+                    if ((s = client.ReceiveStatus()) != ServerStatus.ConnectionClosed)
+                    {
+                        setStatusLabel(s);
 
-                mainInterface1.toggleActive(s);
+                        mainInterface1.toggleActive(s);
+                    }
             }
-            MessageBox.Show("Connection to server was closed.");
-
         }
         delegate void setStatusText(ServerStatus s);
 
@@ -58,7 +60,7 @@ namespace ClientApplication
             if (mainInterface1.statusLabel.InvokeRequired)
             {
                 setStatusText setStatus = (status) => mainInterface1.statusLabel.Text = ServerStatusResponseLabel(status);
-                mainInterface1.statusLabel.Invoke(setStatus,s);
+                mainInterface1.statusLabel.Invoke(setStatus, s);
             }
             else mainInterface1.statusLabel.Text = ServerStatusResponseLabel(s);
         }
