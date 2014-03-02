@@ -41,8 +41,7 @@ namespace Shutdown
         {
             try
             {
-                IPAddress idAP = IPAddress.Parse("127.0.0.1");
-                idAP = IPAddress.Parse("127.0.0.1");
+                
                 listen = new TcpListener(IPAddress.Any, 8001);
                 listen.Start();
 
