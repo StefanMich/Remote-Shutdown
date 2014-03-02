@@ -36,15 +36,16 @@ namespace ClientApplication
 
         void serverStatus_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            MessageBox.Show("Connection to server was lost. Closing the application");
             this.Close();
         }
 
         void serverStatus_DoWork(object sender, DoWorkEventArgs e)
         {
             ServerStatus s;
-            while (true)
+            while (client.Connected)
             {
-                if (client.Connected)
+                
                     if ((s = client.ReceiveStatus()) != ServerStatus.ConnectionClosed)
                     {
                         setStatusLabel(s);
