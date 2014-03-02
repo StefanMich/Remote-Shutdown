@@ -24,9 +24,7 @@ namespace ClientApplication
         }
 
         public bool Connected { get { return tcp.Connected;} }
-
-        public bool Ready { get { return ready; } }
-
+        
         public bool Connect()
         {
             if (tcp == null || tcp.Connected)
@@ -54,6 +52,7 @@ namespace ClientApplication
 
         public ServerStatus ReceiveStatus()
         {
+            
             byte[] b = new byte[1];
             ServerStatus s;
             try

@@ -78,7 +78,7 @@ namespace Shutdown
                         if (k > 0) // The server receives an empty message when a connection is closed
                         {
                             ShutdownMessage message = ShutdownMessage.ReadMessage(b, k);
-                            shutdownCollection.Add(message);
+                            shutdownCollection.Add(message);    
                         }
                     }
                 }

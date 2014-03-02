@@ -153,6 +153,7 @@ namespace Shutdown
                 ShutdownMessage s;
                 if (server.shutdownCollection.TryTake(out s))
                     consumer.ReportProgress(0, s);
+                Thread.Sleep(1000);
             }
         }
 
