@@ -24,7 +24,7 @@ namespace Shutdown
 
         int milliseconds = -1;
 
-        Minimize Mini = new Minimize();
+        Minimize Mini;
         System.Windows.Forms.Timer visualTimer = new System.Windows.Forms.Timer();
         int tick = 1;
 
@@ -35,6 +35,8 @@ namespace Shutdown
         public MainForm()
         {
             InitializeComponent();
+
+             Mini = new Minimize(notifyIcon1,this,shutdown.ShutdownTimer);
 
             visualTimer.Tick += visual_Tick;
             notifyIcon1.Click += notifyIcon1_Click;
@@ -80,7 +82,7 @@ namespace Shutdown
                 if (milliseconds >= 0)
                 {
                     shutdown.ShutdownActionExe(milliseconds, st);
-                    Mini.ToTray(notifyIcon1, this, shutdown.ShutdownTimer, st);
+                    Mini.ToTray( st);
                     tick = 1;
 
                     visualTimer.Interval = 1000;
@@ -101,6 +103,7 @@ namespace Shutdown
         private void CancelShutdown()
         {
             CancelTimers();
+            Mini.DeactivateTray();
             server.ReportClients(ServerStatus.ShutdownCancelled);
             mainInterface1.toggleActive(ServerStatus.ShutdownCancelled);
         }

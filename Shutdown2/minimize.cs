@@ -9,12 +9,23 @@ namespace Shutdown
 {
     class Minimize
     {
+        NotifyIcon notify;
+        Form form;
+        System.Windows.Forms.Timer timer;
+
         delegate void hideform();
 
-        public void ToTray(NotifyIcon notify, Form form, System.Windows.Forms.Timer MyTimer, ShutdownType ShutdownType)
+        public Minimize(NotifyIcon notify, Form form, System.Windows.Forms.Timer timer)
+        {
+            this.notify = notify;
+            this.form = form;
+            this.timer = timer;
+        }
+
+        public void ToTray(ShutdownType ShutdownType)
         {
             notify.Icon = Properties.Resources.favicon;
-            notify.BalloonTipText =  ShutdownType + " in " + (MyTimer.Interval / 60000).ToString() + " minutes.";
+            notify.BalloonTipText =  ShutdownType + " in " + (timer.Interval / 60000).ToString() + " minutes.";
             notify.BalloonTipTitle = "Shutdown";
             notify.Text = "Shutdown";
             notify.Visible = true;
@@ -27,6 +38,18 @@ namespace Shutdown
                 form.Invoke(hidedelegate);
             }
             else form.Hide();
+        }
+
+        public void DeactivateTray()
+        {
+            notify.Visible = false;
+
+            if (form.InvokeRequired)
+            {
+                hideform showdelegate = () => form.Show();
+                form.Invoke(showdelegate);
+            }
+            else form.Show();
         }
     }
 }
