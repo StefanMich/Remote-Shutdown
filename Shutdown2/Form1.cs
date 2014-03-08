@@ -10,6 +10,7 @@ using System.Timers;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Concurrent;
+using Microsoft.Win32;
 
 namespace Shutdown
 {
@@ -38,29 +39,37 @@ namespace Shutdown
             visualTimer.Tick += visual_Tick;
             notifyIcon1.Click += notifyIcon1_Click;
 
-            shutdown.Timer_Elapsed += new EventHandler(Timer_Elapsed);
             serverThread = new Thread(server.ServerLoop);
             serverThread.Start();
+
+            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged;
 
             consumer.RunWorkerAsync();
 
             mainInterface1.Execute.Click += Execute_Click;
         }
 
-
-        void Timer_Elapsed(object sender, EventArgs e)
+        void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
-        }
+            if (e.Mode == PowerModes.Resume)
+                CancelShutdown();
+                }
+
+
 
         private void Execute_Click(object sender, EventArgs e)
         {
             milliseconds = mainInterface1.CalculateTime();
 
             if (mainInterface1.Execute.Text == MainInterface.cancellabel)
-                ExecuteShutdown(0, ShutdownType.Cancel);
+                CancelShutdown();
             else
                 ExecuteShutdown(milliseconds, mainInterface1.ShutdownType);
+        }
 
+        public void ExecuteShutdown(ShutdownMessage s)
+        {
+            ExecuteShutdown(s.Interval, s.Type);
         }
 
         private void ExecuteShutdown(int milliseconds, ShutdownType st)
@@ -85,26 +94,27 @@ namespace Shutdown
             else
             {
                 CancelShutdown();
-                server.ReportClients(ServerStatus.ShutdownCancelled);
-                mainInterface1.toggleActive(ServerStatus.ShutdownCancelled);
             }
 
+        }
+
+        private void CancelShutdown()
+        {
+            CancelTimers();
+            server.ReportClients(ServerStatus.ShutdownCancelled);
+            mainInterface1.toggleActive(ServerStatus.ShutdownCancelled);
         }
 
         /// <summary>
         /// Cancels a ongoing shutdown
         /// </summary>
-        private void CancelShutdown()
+        private void CancelTimers()
         {
             shutdown.ShutdownCancel();
             visualTimer.Enabled = false;
         }
 
-        public void ExecuteShutdown(ShutdownMessage s)
-        {
-            ExecuteShutdown(s.Interval, s.Type);
-
-        }
+        
 
         private void notifyIcon1_DoubleClick(object sender, EventArgs e)
         {
@@ -160,9 +170,6 @@ namespace Shutdown
         private void consumer_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             ExecuteShutdown(e.UserState as ShutdownMessage);
-
         }
-
     }
 }
-
