@@ -60,7 +60,7 @@ namespace ClientApplication
                 stream.Read(b, 0, 1);
                 s = (ServerStatus)b[0];
             }
-            catch (IOException e)
+            catch (IOException)
             {
                 //connection was closed
                 s = ServerStatus.ConnectionClosed;

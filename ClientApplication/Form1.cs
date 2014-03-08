@@ -15,7 +15,6 @@ namespace ClientApplication
     public partial class Form1 : Form
     {
         Client client;
-        bool ready;
         int milliseconds;
         BackgroundWorker serverStatus;
 
