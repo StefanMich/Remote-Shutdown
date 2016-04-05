@@ -119,7 +119,7 @@ namespace Shutdown
 
         
 
-        private void notifyIcon1_DoubleClick(object sender, EventArgs e)
+        private void notifyIcon1_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Normal;
             this.Show();
@@ -131,7 +131,7 @@ namespace Shutdown
             tick++;
         }
 
-        private void notifyIcon1_Click(object sender, EventArgs e)
+        private void showStatusBalloon()
         {
             ShutdownType s = mainInterface1.ShutdownType;
             notifyIcon1.BalloonTipText = "Time remaining to " + s.ToString() + ": " + TimeInterpreter.TimeRemaining(shutdown.ShutdownTimer.Interval, tick);
