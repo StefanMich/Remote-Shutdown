@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <string name="app_name">RemoteAndroidShutdown</string>
-    <string name="title_section1">Countdown</string>
-    <string name="title_section2">Time</string>
-    <string name="action_settings">Settings</string>
-
-</resources>
