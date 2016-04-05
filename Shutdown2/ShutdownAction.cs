@@ -15,19 +15,19 @@ namespace Shutdown
         /// <summary>
         /// Shutdown mode
         /// </summary>
-        Shutdown,
+        Shutdown = 0,
         /// <summary>
         /// Reboot mde
         /// </summary>
-        Reboot,
+        Reboot = 1,
         /// <summary>
         /// Hibernate mode
         /// </summary>
-        Hibernate,
+        Hibernate = 2,
         /// <summary>
         /// Cancel a shutdown
         /// </summary>
-        Cancel
+        Cancel = 3
 
     }
 
