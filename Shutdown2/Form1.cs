@@ -69,11 +69,6 @@ namespace Shutdown
                 ExecuteShutdown(milliseconds, mainInterface1.ShutdownType);
         }
 
-        public void ExecuteShutdown(ShutdownMessage s)
-        {
-            ExecuteShutdown(s.Interval, s.Type);
-        }
-
         private void ExecuteShutdown(int milliseconds, ShutdownType st)
         {
 
@@ -172,7 +167,8 @@ namespace Shutdown
 
         private void consumer_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            ExecuteShutdown(e.UserState as ShutdownMessage);
+            ShutdownMessage message = e.UserState as ShutdownMessage;
+            ExecuteShutdown(message.Interval, message.Type);
         }
     }
 }
