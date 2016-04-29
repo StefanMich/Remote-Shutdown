@@ -116,8 +116,10 @@ namespace Shutdown
 
         private void notifyIcon1_Click(object sender, EventArgs e)
         {
-            this.WindowState = FormWindowState.Normal;
             this.Show();
+            this.WindowState = FormWindowState.Normal;
+            this.Activate();
+
         }
         private void visual_Tick(object sender, EventArgs e)
         {
